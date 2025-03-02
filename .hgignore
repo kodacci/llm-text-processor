@@ -1,0 +1,6 @@
+distrib/*
+logs/*
+.idea/*
+
+.gitignore
+dist/*
