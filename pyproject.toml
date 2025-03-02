@@ -1,0 +1,4 @@
+[project]
+name = "llm-text-processor"
+version = "1.0.0"
+description = "Text processor for AI agent embeddings"

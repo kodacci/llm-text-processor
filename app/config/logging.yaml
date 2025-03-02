@@ -1,0 +1,29 @@
+version: 1
+
+formatters:
+  default:
+    format: '%(asctime)s [%(levelname)s] [%(threadName)s] [%(module)s] [%(filename)s] - %(message)s'
+    use_colors: true
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: default
+    level: !ENV ${ROOT_LOG_LEVEL:DEBUG}
+    stream: ext://sys.stdout
+  file:
+    class: app.utils.custom_rotating_file_handler.CustomRotatingFileHandler
+    formatter: default
+    filename: logs/server.log
+    maxBytes: 1048576
+    encoding: utf-8
+    backupCount: 3
+    level: !ENV ${ROOT_LOG_LEVEL:DEBUG}
+
+root:
+  level: !ENV ${ROOT_LOG_LEVEL:DEBUG}
+  handlers:
+    - console
+    - file
+
+disable_existing_loggers: False

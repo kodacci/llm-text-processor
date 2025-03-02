@@ -1,0 +1,9 @@
+server:
+  uvicorn:
+    host: 0.0.0.0
+    port: 8080
+
+chunkers:
+  recursive:
+    chunk-size: !ENV ${RECURSIVE_CHUNKER_CHUNK_SIZE:512}
+    chunk-overlap: !ENV ${RECURSIVE_CHUNKER_CHUNK_OVERLAP:256}
