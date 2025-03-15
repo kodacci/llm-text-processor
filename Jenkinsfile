@@ -35,7 +35,7 @@ pipeline {
         stage('Determine Version') {
             steps {
                 script {
-                    whithPythonEnv('Python-3') {
+                    withPythonEnv('Python-3') {
                         sh 'pip install -U hatch'
                         sh 'hatch --version'
 
