@@ -25,7 +25,7 @@ def buildImage(name, dockerFilePath, scope, version, buildNumber) {
 }
 
 pipeline {
-    agent { any }
+    agent any
 
     options {
         ansiColor('xterm')
