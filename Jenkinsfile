@@ -62,11 +62,11 @@ pipeline {
                     try {
                         withPythonEnv('Python-3') {
                             sh 'pip install -U hatch'
-                            sh "hatch -v build -t wheel &> \"$logFileName\""
+                            sh "hatch -v build -t wheel"
                         }
                     } finally {
-                        archiveArtifacts(logFileName)
-                        sh "rm \"$logFileName\""
+//                        archiveArtifacts(logFileName)
+//                        sh "rm \"$logFileName\""
                     }
                 }
 
