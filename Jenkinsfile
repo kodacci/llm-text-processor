@@ -88,7 +88,7 @@ pipeline {
                     withPythonEnv('Python-3') {
                         sh 'pip install -U twine'
 
-                        withCredentials([usernamePasword(
+                        withCredentials([usernamePassword(
                                 credentialsId: 'vault-nexus-deployer',
                                 usernameVariable: 'TWINE_USERNAME',
                                 passwordVariable: 'TWINE_PASSWORD'
