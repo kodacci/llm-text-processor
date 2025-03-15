@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM python:3.13.2
+FROM python:3.13.2-slim-bookworm
 
 LABEL authors="Andrey Ryabtsev"
 
