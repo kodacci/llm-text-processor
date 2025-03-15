@@ -62,6 +62,7 @@ pipeline {
                     try {
                         withPythonEnv('Python-3') {
                             sh 'pip install -U hatch'
+                            sh 'hatch env create prod'
                             sh "hatch -v build -t wheel"
                         }
                     } finally {
