@@ -3,7 +3,7 @@ def DEPLOY_GIT_SCOPE
 def APP_IMAGE_TAG
 
 static def genImageTag(name, scope, version, buildNumber) {
-    return 'pro.ra-tech/giga-ai-agent/' +
+    return 'pro.ra-tech/llm-text-processor/' +
             scope + '/' + name + ':' +
             version + '-' + buildNumber
 }
