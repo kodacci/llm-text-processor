@@ -55,7 +55,7 @@ pipeline {
                     withKubeConfig([credentialsId: 'jenkins-k8s-cert', serverUrl: KUBERNETES_API_URL, namespace: namespace]) {
                         sh 'kubectl version'
 
-                        println "Deleting core deployment and pods"
+                        println "Deleting app deployment and pods"
                         sh "kubectl delete deployment -l app.kubernetes.io/component=llm-text-processor -n $namespace"
                         sh "kubectl wait --for=delete pod -l app=llm-text-processor --timeout 5m -n $namespace"
 
