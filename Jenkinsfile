@@ -36,6 +36,9 @@ pipeline {
             steps {
                 script {
                     withPythonEnv('Python-3') {
+                        println 'Getting python version'
+                        sh 'python --version'
+
                         sh 'pip install -U hatch'
                         sh 'hatch --version'
 
