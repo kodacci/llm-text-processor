@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-text-processor
+  namespace: {{ namespace }}
+  labels:
+    app.kubernetes.io/name: llm-text-processor-service
+    app.kubernetes.io/part-of: giga-ai-agent
+    app.kubernetes.io/component: llm-text-processor
+spec:
+  selector:
+    app: llm-text-processor
+  ports:
+    - name: http-rest-api
+      protocol: TCP
+      port: 8080
+      targetPort: llm-text-processor-rest-api

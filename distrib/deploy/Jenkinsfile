@@ -1,0 +1,99 @@
+def DEPLOY_GIT_SCOPE
+def DEPLOY_NAMESPACE
+def REGISTRY_HOST
+
+def generateImageTag(container) {
+    def scope = sh(encoding: 'UTF-8', returnStdout: true, script: 'git name-rev --name-only HEAD')
+            .trim()
+            .tokenize('/')
+            .last()
+            .toLowerCase()
+
+    return 'pro.ra-tech/llm-text-processor/' + scope + '/' + container + ':latest'
+}
+
+static def removeProtocol(url) {
+    return url.substring('https://'.length())
+}
+
+pipeline {
+    agent { label 'python' }
+
+    parameters {
+        string(name: 'app_image', description: 'App image tog to use in deploy')
+    }
+
+    stages {
+        stage('Determine git scope') {
+            steps {
+                script {
+                    DEPLOY_GIT_SCOPE = BRANCH_NAME.tokenize('/').last().toLowerCase()
+                    println "Git branch scope: '${DEPLOY_GIT_SCOPE}'"
+                }
+            }
+        }
+
+        stage('Determine stand specific params') {
+            steps {
+                script {
+                    if (BRANCH_NAME.startsWith('release/')) {
+                        DEPLOY_NAMESPACE = 'giga-ai-agent'
+                        REGISTRY_HOST = removeProtocol(DOCKER_REGISTRY_HOST)
+                    } else {
+                        DEPLOY_NAMESPACE = 'giga-ai-agent-test'
+                        REGISTRY_HOST = removeProtocol(SNAPSHOTS_DOCKER_REGISTRY_HOST)
+                    }
+                    println "Namespace to deploy app: $DEPLOY_NAMESPACE"
+                }
+            }
+        }
+
+        stage('Cleanup k8s namespace') {
+            steps {
+                script {
+                    def namespace = DEPLOY_NAMESPACE
+                    withKubeConfig([credentialsId: 'jenkins-k8s-cert', serverUrl: KUBERNETES_API_URL, namespace: namespace]) {
+                        sh 'kubectl version'
+
+                        println "Deleting core deployment and pods"
+                        sh "kubectl delete deployment -l app.kubernetes.io/component=llm-text-processor -n $namespace"
+                        sh "kubectl wait --for=delete pod -l app=llm-text-processor --timeout 5m -n $namespace"
+
+                        println 'Deleting other app manifests'
+                        sh "kubectl delete service -l app.kubernetes.io/component=llm-text-processor -n $namespace"
+                        sh "kubectl delete configmaps -l app.kubernetes.io/component=llm-text-processor -n $namespace"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to k8s') {
+            steps {
+                script {
+                    def namespace = DEPLOY_NAMESPACE
+                    def registry = REGISTRY_HOST
+                    def appImageTag = params.app_image ? params.app_image : generateImageTag('llm-text-processor')
+                    def vaultHost = removeProtocol(VAULT_HOST)
+
+                    withPythonEnv('Python-3') {
+                        sh 'pip install -U jinja2-cli'
+
+                        sh "jinja2 -D namespace=$namespace -D registry=$registry -D image_tag=$appImageTag -Dvault_address=http://${vaultHost} distrib/templates/deployment.yaml > distrib/deployment.yaml"
+                        sh "jinja2 -D namespace=$namespace distrib/templates/service.yaml > distrib/service.yaml"
+                        sh "jinja2 -D namespace=$namespace -Dvault_addr=http://${vaultHost} distrib/templates/configmaps/app-vault-agent.yaml > distrib/app-vault-agent.yaml"
+                    }
+
+                    withKubeConfig([credentialsId: 'jenkins-k8s-cert', serverUrl: KUBERNETES_API_URL, namespace: namespace]) {
+                        println "Applying app manifests"
+                        sh 'kubectl apply -f distrib/service.yaml'
+
+                        // Deploying main app
+                        sh 'kubectl apply -f distrib/service.yaml -f distrib/app-vault-agent.yaml -f distrib/deployment.yaml'
+                        sleep time: 3, unit: 'SECONDS'
+                        sh "kubectl wait --for=condition=ready --timeout=5m -n $namespace pods -l app=llm-text-processor"
+                    }
+                }
+            }
+        }
+    }
+}

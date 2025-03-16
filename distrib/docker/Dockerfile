@@ -12,7 +12,8 @@ COPY --chown=llm-text-processor:llm-text-processor distrib/docker/entrypoint.sh 
 RUN chmod +x ./entrypoint.sh
 
 RUN python -m pip install --upgrade pip
-RUN pip install .
+RUN pip install hatch
+RUN python -m hatch env create prod
 
 EXPOSE 8080
 ENTRYPOINT ["/home/llm-text-processor/entrypoint.sh"]
