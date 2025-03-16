@@ -39,6 +39,8 @@ pipeline {
                         println 'Getting python version'
                         sh 'python --version'
 
+                        sh 'python -m pip install -U pip'
+
                         sh 'pip install -U hatch'
                         sh 'hatch --version'
 
@@ -100,7 +102,13 @@ pipeline {
                                 ),
                                 file(credentialsId: 'old-ra-tech-ca-certificate', variable: 'TWINE_CERT')
                         ]) {
-                            sh "twine upload --repository-url $NEXUS_PYPI_SNAPSHOTS dist/*"
+                            def logFileName = env.BUILD_TAG + '-deploy.log'
+                            try {
+                                sh "twine upload --repository-url $NEXUS_PYPI_SNAPSHOTS dist/* > \"$logFileName\" 2>&1"
+                            } finally {
+                                archiveArtifacts(logFileName)
+                                sh "rm \"$logFileName\""
+                            }
                         }
                     }
 
