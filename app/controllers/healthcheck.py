@@ -1,6 +1,6 @@
 from enum import Enum
 
-from fastapi import APIRouter
+from fastapi import APIRouter, FastAPI
 from fastapi_restful.cbv import cbv
 from pydantic import BaseModel
 from starlette.routing import Router
@@ -23,6 +23,9 @@ class HelloController(BaseController):
 
     def _get_router(self) -> Router:
         return _router
+
+    def register(self, app: FastAPI):
+        app.include_router(self._get_router())
 
     @_router.get('/healthcheck', response_model=HealthCheckResponse)
     def hello(self):
