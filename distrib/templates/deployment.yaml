@@ -67,7 +67,7 @@ spec:
           image: {{ registry }}/{{ image_tag }}
           ports:
               - containerPort: 8080
-                name: llm-text-processor-rest-api
+                name: rest-api
           env:
             - name: POD_NAME
               valueFrom:
