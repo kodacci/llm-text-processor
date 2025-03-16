@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: giga-ai-agent-core
+  name: llm-text-processor
   namespace: {{ namespace }}
   labels:
     app.kubernetes.io/name: llm-text-processor
