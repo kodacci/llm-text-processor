@@ -21,7 +21,7 @@ class HelloController(BaseController):
     def _get_api_version(self) -> str:
         return 'v1'
 
-    def _get_router(self) -> Router:
+    def _get_router(self) -> APIRouter:
         return _router
 
     def register(self, app: FastAPI):
