@@ -68,6 +68,7 @@ pipeline {
                         withPythonEnv('Python-3') {
                             sh "pip install -U hatch >> \"$logFileName\" 2>&1"
                             sh "hatch env create prod >> \"$logFileName\" 2>&1"
+                            sh "hatch version \"$PROJECT_VERSION+$DEPLOY_GIT_SCOPE-${currentBuild.number}\""
                             sh "hatch -v build -t wheel >> \"$logFileName\" 2>&1"
                         }
                     } finally {
