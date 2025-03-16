@@ -86,8 +86,8 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           volumeMounts:
-#            - mountPath: /home/giga-ai-agent/logs
-#              name: logs-volume
+            - mountPath: /home/giga-ai-agent/logs
+              name: logs-volume
             - mountPath: /application
               name: application-config
               readOnly: true
