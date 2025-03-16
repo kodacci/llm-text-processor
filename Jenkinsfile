@@ -64,13 +64,13 @@ pipeline {
                     def logFileName = env.BUILD_TAG + '-build.log'
                     try {
                         withPythonEnv('Python-3') {
-                            sh 'pip install -U hatch'
-                            sh 'hatch env create prod'
-                            sh "hatch -v build -t wheel"
+                            sh "pip install -U hatch >> \"$logFileName\" 2>&1"
+                            sh "hatch env create prod >> \"$logFileName\" 2>&1"
+                            sh "hatch -v build -t wheel >> \"$logFileName\" 2>&1"
                         }
                     } finally {
-//                        archiveArtifacts(logFileName)
-//                        sh "rm \"$logFileName\""
+                        archiveArtifacts(logFileName)
+                        sh "rm \"$logFileName\""
                     }
                 }
 
@@ -92,11 +92,14 @@ pipeline {
                     withPythonEnv('Python-3') {
                         sh 'pip install -U twine'
 
-                        withCredentials([usernamePassword(
-                                credentialsId: 'vault-nexus-deployer',
-                                usernameVariable: 'TWINE_USERNAME',
-                                passwordVariable: 'TWINE_PASSWORD'
-                        )]) {
+                        withCredentials([
+                                usernamePassword(
+                                    credentialsId: 'vault-nexus-deployer',
+                                    usernameVariable: 'TWINE_USERNAME',
+                                    passwordVariable: 'TWINE_PASSWORD'
+                                ),
+                                file(credentialsId: 'old-ra-tech-ca-certificate', variable: 'TWINE_CERT')
+                        ]) {
                             sh "twine upload --repository-url $NEXUS_PYPI_SNAPSHOTS dist/*"
                         }
                     }
