@@ -35,7 +35,7 @@ pipeline {
         stage('Determine Version') {
             steps {
                 script {
-                    withPythonEnv('Python-3') {
+                    withPythonEnv('/usr/local/bin/python3.13') {
                         println 'Getting python version'
                         sh 'python --version'
 
