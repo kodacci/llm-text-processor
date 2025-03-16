@@ -1,4 +1,53 @@
 [project]
 name = "llm-text-processor"
-version = "1.0.0"
 description = "Text processor for AI agent embeddings"
+requires-python = ">=3.11.2"
+license = "GPL-3.0-or-later"
+dynamic = ["version"]
+authors = [
+    { name = "Andrey Ryabtsev" }
+]
+maintainers = [
+    { name = "Andrey Ryabtsev" }
+]
+dependencies = [
+    "fastapi[standard] >= 0.115.11",
+    "uvicorn[standard] >= 0.34.0",
+    "dishka >= 1.4.2",
+    "langchain-text-splitters>=0.3.6",
+    "fastapi-restful >= 0.6.0",
+    "typing-inspect >= 0.9.0",
+    "pyaml_env >= 1.2.2",
+    "pydantic >= 2.10.6"
+]
+
+[build-system]
+requires = ["hatchling >= 1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "app/__about__.py"
+
+[tool.hatch.build]
+directory = "dist"
+
+[tool.hatch.build.targets.sdist]
+packages = [
+    "app"
+]
+exclude = [
+    ".gitignore",
+    ".higignore"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "app"
+]
+exclude = [
+    ".gitignore",
+    ".hgignore"
+]
+
+[tool.hatch.envs.prod]
+dev-mode = false
