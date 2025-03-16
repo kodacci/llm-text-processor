@@ -66,9 +66,16 @@ pipeline {
                     def logFileName = env.BUILD_TAG + '-build.log'
                     try {
                         withPythonEnv('Python-3') {
+                            sh "echo \"*** Installing hatch ***\" > \"$logFileName\""
                             sh "pip install -U hatch >> \"$logFileName\" 2>&1"
+
+                            sh "echo \"*** Creating env ***\" >> \"$logFileName\""
                             sh "hatch env create prod >> \"$logFileName\" 2>&1"
+
+                            sh "echo \"*** Setting version ***\" >> \"$logFileName\""
                             sh "hatch version \"$PROJECT_VERSION+$DEPLOY_GIT_SCOPE-${currentBuild.number}\""
+
+                            sh "echo \"*** Building package ***\" >> \"$logFileName\""
                             sh "hatch -v build -t wheel >> \"$logFileName\" 2>&1"
                         }
                     } finally {
