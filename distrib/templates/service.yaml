@@ -14,4 +14,4 @@ spec:
     - name: http-rest-api
       protocol: TCP
       port: 8080
-      targetPort: llm-text-processor-rest-api
+      targetPort: rest-api
