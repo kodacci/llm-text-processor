@@ -86,7 +86,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           volumeMounts:
-            - mountPath: /home/giga-ai-agent/logs
+            - mountPath: /home/llm-text-processor/logs
               name: logs-volume
             - mountPath: /application
               name: application-config
@@ -95,14 +95,14 @@ spec:
             httpGet:
               path: /healthcheck
               port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 3
+            initialDelaySeconds: 180
+            periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
               path: /healthcheck
               port: 8080
-            initialDelaySeconds: 15
+            initialDelaySeconds: 180
             periodSeconds: 5
             failureThreshold: 10
           resources:
