@@ -81,11 +81,12 @@ pipeline {
                         sh "jinja2 -D namespace=$namespace -D registry=$registry -D image_tag=$appImageTag -Dvault_address=http://${vaultHost} distrib/templates/deployment.yaml > distrib/deployment.yaml"
                         sh "jinja2 -D namespace=$namespace distrib/templates/service.yaml > distrib/service.yaml"
                         sh "jinja2 -D namespace=$namespace -Dvault_addr=http://${vaultHost} distrib/templates/configmaps/app-vault-agent.yaml > distrib/app-vault-agent.yaml"
+                        sh "jinja2 -D namespace=$namespace -D solr_collection=$namespace distrib/templates/configmaps/app-fluentbit.yaml > distrib/app-fluentbit.yaml"
                     }
 
                     withKubeConfig([credentialsId: 'jenkins-k8s-cert', serverUrl: KUBERNETES_API_URL, namespace: namespace]) {
                         println "Applying app manifests"
-                        sh 'kubectl apply -f distrib/service.yaml'
+                        sh 'kubectl apply -f distrib/service.yaml -f distrib/app-fluentbit.yaml'
 
                         // Deploying main app
                         sh 'kubectl apply -f distrib/service.yaml -f distrib/app-vault-agent.yaml -f distrib/deployment.yaml'
