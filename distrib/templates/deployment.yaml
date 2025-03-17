@@ -27,9 +27,9 @@ spec:
         app.kubernetes.io/part-of: giga-ai-agent
         app.network.policy: restricted
         sidecar.istio.io/proxyCPU: '100m'
-        sidecar.istio.io/proxyCPULimit: '150m'
+        sidecar.istio.io/proxyCPULimit: '100m'
         sidecar.istio.io/proxyMemory: '128Mi'
-        sidecar.istio.io/proxyMemoryLimit: '256Mi'
+        sidecar.istio.io/proxyMemoryLimit: '128Mi'
     spec:
       volumes:
         - name: logs-volume
