@@ -18,10 +18,10 @@ handlers:
     maxBytes: 1048576
     encoding: utf-8
     backupCount: 3
-    level: !ENV ${ROOT_LOG_LEVEL:DEBUG}
+    level: !ENV ${ROOT_LOG_LEVEL:TRACE}
 
 root:
-  level: !ENV ${ROOT_LOG_LEVEL:DEBUG}
+  level: !ENV ${ROOT_LOG_LEVEL:TRACE}
   handlers:
     - console
     - file

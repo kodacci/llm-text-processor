@@ -138,5 +138,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Trigger deploy pipeline') {
+            steps {
+                script {
+                    def path = BRANCH_NAME.replaceAll("/", "%2F")
+                    build(
+                            job: "LLM Text Processor Backend CD/$path",
+                            wait: false,
+                            parameters: [
+                                    string(name: 'app_image', value: APP_IMAGE_TAG),
+                            ]
+                    )
+                }
+            }
+        }
     }
 }

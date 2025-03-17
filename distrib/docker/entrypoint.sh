@@ -10,4 +10,4 @@ done
 
 echo "Environment file found, starting main app ..."
 
-env -S "$(cat $ENV_PATH)" python -m app.main
+env -S "$(cat $ENV_PATH)" python -m hatch run prod:python -m app.main
