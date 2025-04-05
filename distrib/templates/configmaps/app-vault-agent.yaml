@@ -49,7 +49,7 @@ data:
       contents = <<EOT
     [[- with secret "ra-tech-kv/data/{{namespace}}/llm-text-processor/environment" ]]
     [[- range $key, $value := .Data.data ]]
-    [[ $key ]]="[[ $value ]]"
+    [[ $key ]]='[[ $value ]]'
     [[- end ]]
     [[- end ]]
     EOT
