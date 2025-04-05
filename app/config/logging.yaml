@@ -15,6 +15,8 @@ handlers:
     formatter: default
     level: !ENV ${ROOT_LOG_LEVEL:DEBUG}
     stream: ext://sys.stdout
+    filters:
+      - healthcheck
   file:
     class: app.utils.custom_rotating_file_handler.CustomRotatingFileHandler
     formatter: default
