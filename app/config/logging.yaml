@@ -5,6 +5,10 @@ formatters:
     format: '%(asctime)s [%(levelname)s] [%(threadName)s] [%(module)s] [%(filename)s] - %(message)s'
     use_colors: true
 
+filters:
+  healthcheck:
+    (): app.utils.healthcheck_filter.HealthcheckFilter
+
 handlers:
   console:
     class: logging.StreamHandler
@@ -19,6 +23,8 @@ handlers:
     encoding: utf-8
     backupCount: 3
     level: !ENV ${ROOT_LOG_LEVEL:TRACE}
+    filters:
+      - healthcheck
 
 root:
   level: !ENV ${ROOT_LOG_LEVEL:TRACE}
