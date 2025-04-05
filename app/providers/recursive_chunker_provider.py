@@ -1,3 +1,5 @@
+import json
+
 from dishka import Provider, provide, Scope
 
 from app.utils.app_config import AppConfig
@@ -8,4 +10,10 @@ class RecursiveChunkerProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def get_chunker(self, config: AppConfig) -> RecursiveChunker:
         params = config.get()['chunkers']['recursive']
-        return RecursiveChunker(int(params['chunk-size']), int(params['chunk-overlap']))
+
+        return RecursiveChunker(
+            int(params['chunk-size']),
+            int(params['chunk-overlap']),
+            json.loads(params['separators']),
+            bool(params['keep-separator'])
+        )

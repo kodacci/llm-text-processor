@@ -5,5 +5,7 @@ server:
 
 chunkers:
   recursive:
-    chunk-size: !ENV ${RECURSIVE_CHUNKER_CHUNK_SIZE:512}
-    chunk-overlap: !ENV ${RECURSIVE_CHUNKER_CHUNK_OVERLAP:256}
+    chunk-size: !ENV ${RECURSIVE_CHUNKER_CHUNK_SIZE:1100}
+    chunk-overlap: !ENV ${RECURSIVE_CHUNKER_CHUNK_OVERLAP:200}
+    separators: !ENV ${RECURSIVE_CHUNKER_SEPARATORS:[".", "\n\n", "\n", "--", ".", ""]}
+    keep-separator: !ENV ${RECURSIVE_CHUNKER_KEEP_SEPARATOR:true}
